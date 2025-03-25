@@ -1,4 +1,4 @@
-curl -v -X POST "http://localhost:8300/api/device-event" \
+curl -v -X POST "http://localhost:20000/api/device-event" \
 -H "Content-Type: application/json" \
 -d '{
 "deviceCode": "0869446076986939",
