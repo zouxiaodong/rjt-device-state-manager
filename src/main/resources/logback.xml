@@ -12,21 +12,6 @@
         </encoder>
     </appender>
 
-    <appender name="file_console" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/stdouterr.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/stdouterr.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>1</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${log.pattern}</pattern>
-            <charset>utf-8</charset>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
-    </appender>
-
     <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/app.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -96,11 +81,10 @@
     <root level="info">
         <appender-ref ref="console"/>
         <appender-ref ref="async_info"/>
-        <appender-ref ref="async_aop"/>
         <appender-ref ref="async_error"/>
     </root>
-    <logger name="stdout_err" level="info">
-        <appender-ref ref="file_console"/>
+    <logger name="com.ns.device_state_manager.aop.LogAop" level="info" additivity="false">
+        <appender-ref ref="async_aop"/>
     </logger>
 
 </configuration>
