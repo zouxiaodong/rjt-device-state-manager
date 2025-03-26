@@ -28,20 +28,20 @@ public class DeviceEventService {
                 "UPDATE device_info SET status = ?, RECENT_TIME = ? WHERE device_mac = ? and status >= 0",
                 status,
                 request.getTime(),
-                request.getDeviceCode()
+                request.getDeviceId()
         );
 
         // 3. 检查设备是否存在
         if (updatedRows == 0) {
-            throw new DeviceNotFoundException("设备不存在: " + request.getDeviceCode());
+            throw new DeviceNotFoundException("设备不存在: " + request.getDeviceId());
         }
     }
 
     /**
      * 事件类型到状态码的映射规则：
      * evtType: 1-上线 → 状态0（正常）
-     *          2-心跳 → 状态0（正常）
-     *          3-离线 → 状态1（离线）
+     * 2-心跳 → 状态0（正常）
+     * 3-离线 → 状态1（离线）
      */
     private Integer convertEvtTypeToStatus(Integer evtType) {
         if (evtType == null) return null;

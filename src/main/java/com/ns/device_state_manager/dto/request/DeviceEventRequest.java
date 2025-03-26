@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class DeviceEventRequest {
-    private String deviceCode;     // 对应device_mac
+    private String deviceId;     // 对应device_mac
     private Integer evtType;      // 事件类型: 1-上线 2-心跳 3-离线
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime time;    // 事件时间
