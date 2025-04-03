@@ -2,10 +2,14 @@ package com.ns.device_state_manager.service;
 
 import com.ns.device_state_manager.dto.request.DeviceEventRequest;
 import com.ns.device_state_manager.exception.DeviceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
+@Slf4j
 @Service
 public class DeviceEventService {
 
@@ -23,18 +27,41 @@ public class DeviceEventService {
             throw new IllegalArgumentException("无效事件类型: " + request.getEvtType());
         }
 
+
+        // 通过device_mac查询设备信息，返回对应的id, parent_id
+        Map<String, Object> deviceInfo = jdbcTemplate.queryForMap(
+                "SELECT id, parent_id FROM device_info WHERE device_mac = ? and status >= 0 limit 1",
+                request.getDeviceId());
+
+        if (deviceInfo == null || !deviceInfo.containsKey("id") || !deviceInfo.containsKey("parent_id")) {
+            log.warn("设备不存在: " + request.getDeviceId());
+            return;
+        }
+
+        Integer deviceId = (Integer) deviceInfo.get("id");
+        Integer parentId = (Integer) deviceInfo.get("parent_id");
+
+
+        // 更新当前设备的状态
         // 2. 执行数据库更新
         int updatedRows = jdbcTemplate.update(
-                "UPDATE device_info SET status = ?, RECENT_TIME = ? WHERE device_mac = ? and status >= 0",
+                "UPDATE device_info SET status = ?, RECENT_TIME = ? WHERE id = ? and status >= 0",
                 status,
                 request.getTime(),
-                request.getDeviceId()
+                deviceId
         );
+        log.info("本设备状态更新:{} {} ", deviceId, updatedRows);
 
-        // 3. 检查设备是否存在
-        if (updatedRows == 0) {
-            throw new DeviceNotFoundException("设备不存在: " + request.getDeviceId());
+        if (parentId == null) {
+            return;
         }
+
+        updatedRows = jdbcTemplate.update(
+                "UPDATE device_info SET status = ?, RECENT_TIME = ? WHERE id = ? and status >= 0 and device_mac is null",
+                status,
+                request.getTime(), parentId
+        );
+        log.info("父设备状态更新:{} {} ", parentId, updatedRows);
     }
 
     /**
