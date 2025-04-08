@@ -57,7 +57,7 @@ public class DeviceEventService {
         }
         // 更新父设备的状态，如果父设备是虚拟设备（device_mac为空），则更新其状态
         updatedRows = jdbcTemplate.update(
-                "UPDATE device_info SET status = ?, RECENT_TIME = ? WHERE id = ? and status >= 0 and device_mac is null",
+                "UPDATE device_info SET status = ?, RECENT_TIME = ? WHERE id = ? and status >= 0 and chip_type = 3",
                 status,
                 request.getTime(), parentId
         );
