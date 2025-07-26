@@ -50,7 +50,7 @@ public class DeviceEventService {
                 request.getTime(),
                 deviceId
         );
-        log.info("本设备状态更新:{} {} ", deviceId, updatedRows);
+        log.info("本设备状态更新:{} 状态：{}  成功：{}", deviceId, status, updatedRows);
 
         if (parentId == null) {
             return;
@@ -61,7 +61,8 @@ public class DeviceEventService {
                 status,
                 request.getTime(), parentId
         );
-        log.info("父设备状态更新:{} {} ", parentId, updatedRows);
+        log.info("父设备状态更新:{} 状态：{}  成功：{}", parentId, status, updatedRows);
+
     }
 
     /**
