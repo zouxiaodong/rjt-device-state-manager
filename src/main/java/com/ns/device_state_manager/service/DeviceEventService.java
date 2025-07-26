@@ -72,10 +72,10 @@ public class DeviceEventService {
      */
     private Integer convertEvtTypeToStatus(Integer evtType) {
         if (evtType == null) return null;
-
+        //	NORMAL(0, "正常"), LOST(1, "失踪"), EXCEPTIONS(2, "异常"), DISABLE(3, "停用"),OFFLINE(4,"离线"), DELETE(-1, "删除");
         return switch (evtType) {
             case 1, 2 -> 0;   // 上线和心跳保持正常状态
-            case 3 -> 1;      // 离线状态
+            case 3 -> 4;      // 离线状态
             default -> null;  // 无效类型
         };
     }
